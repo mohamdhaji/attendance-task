@@ -13,15 +13,15 @@ public interface AttendanceRepo extends JpaRepository<Attendance,Integer>{
 
 
 
-        Attendance findByUser_IdAndDate(int userId, String date);
+        Attendance findByUser_IdAndDate(int userId, Date date);
 
         Attendance findByUserId(int userId);
 
-        List<Attendance> findAllByDate(String date);
+        List<Attendance> findAllByDate(Date date);
 
-        List<Attendance> findAllByDateBetween(
-                LocalDateTime firstMonthDay,
-                LocalDateTime lastMonthDay);
+//        List<Attendance> findAllByDateBetween(
+//                LocalDateTime firstMonthDay,
+//                LocalDateTime lastMonthDay);
 
 
 

@@ -23,19 +23,19 @@ public class Attendance {
     private String checkOut;
 
     @Temporal(TemporalType.DATE)
-    private LocalDateTime date;
+    private Date date;
     private String report;
 
     public Attendance() {
     }
 
-    public Attendance(User user, String checkIn, LocalDateTime date) {
+    public Attendance(User user, String checkIn, Date date) {
         this.user = user;
         this.checkIn = checkIn;
         this.date = date;
     }
 
-    public Attendance( String checkOut,User user,LocalDateTime date) {
+    public Attendance( String checkOut,User user,Date date) {
         this.user = user;
         this.checkOut = checkOut;
         this.date = date;
@@ -84,11 +84,11 @@ public class Attendance {
         this.checkOut = checkOut;
     }
 
-    public LocalDateTime getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 }

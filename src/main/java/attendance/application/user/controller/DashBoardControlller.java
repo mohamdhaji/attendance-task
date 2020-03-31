@@ -13,8 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Optional;
 
 @RestController
@@ -35,8 +37,9 @@ public class DashBoardControlller {
         if (!user.isPresent())
             throw new UserNotFoundException("check your name or password");
 
-
-        Optional<Attendance> attendance = Optional.ofNullable(attendanceRepo.findByUser_IdAndDate(user.get().getId(), java.time.LocalDate.now() + ""));
+        long millis=System.currentTimeMillis();
+        java.sql.Date date=new java.sql.Date(millis);
+        Optional<Attendance> attendance = Optional.ofNullable(attendanceRepo.findByUser_IdAndDate(user.get().getId(), date));
 
         if (attendance.isPresent()) {
             throw new UserCheckedException("Check-In Already Done Today!");
@@ -45,7 +48,8 @@ public class DashBoardControlller {
         String checkInTime = TimeService.getCurrentTime();
 
 
-        Attendance userAttendance = new Attendance(user.get(), checkInTime, LocalDateTime.now());
+
+        Attendance userAttendance = new Attendance(user.get(), checkInTime,date);
         attendanceRepo.save(userAttendance);
 
 
@@ -61,8 +65,10 @@ public class DashBoardControlller {
         if (!user.isPresent())
             throw new UserNotFoundException("check your name or password");
 
+        long millis=System.currentTimeMillis();
+        java.sql.Date date=new java.sql.Date(millis);
 
-        Optional<Attendance> attendance = Optional.ofNullable(attendanceRepo.findByUser_IdAndDate(user.get().getId(), java.time.LocalDate.now() + ""));
+        Optional<Attendance> attendance = Optional.ofNullable(attendanceRepo.findByUser_IdAndDate(user.get().getId(), date ));
 
         if (attendance.isPresent()) {
 
@@ -83,7 +89,8 @@ public class DashBoardControlller {
         } else {
             String checkOutTime = TimeService.getCurrentTime();
 
-            Attendance userAttendance = new Attendance(checkOutTime, user.get(), LocalDateTime.now());
+
+            Attendance userAttendance = new Attendance(checkOutTime, user.get(), date);
             return new ResponseEntity("Check-Out Successfully", HttpStatus.OK);
 
         }
