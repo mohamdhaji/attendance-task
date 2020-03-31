@@ -1,4 +1,4 @@
-package com.example.attendanceservice.exception;
+package attendance.application.exception;
 
 import java.util.Date;
 

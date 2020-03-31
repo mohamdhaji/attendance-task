@@ -1,12 +1,13 @@
-package com.example.attendanceservice.controllers;
+package attendance.application.user.controller;
 
 
-import com.example.attendanceservice.entities.Attendance;
-import com.example.attendanceservice.entities.User;
-import com.example.attendanceservice.exception.UserCheckedException;
-import com.example.attendanceservice.repositories.AttendanceRepo;
-import com.example.attendanceservice.services.TimeService;
-import com.example.attendanceservice.session.LoginSession;
+import attendance.application.exception.UserNotFoundException;
+import attendance.application.user.entity.Attendance;
+import attendance.application.user.entity.User;
+import attendance.application.user.repositories.AttendanceRepo;
+import attendance.application.user.repositories.UserRepo;
+import attendance.application.user.service.TimeService;
+import attendance.application.exception.UserCheckedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,19 +22,12 @@ public class DashBoardControlller {
     @Autowired
     AttendanceRepo attendanceRepo;
 
-
+    @Autowired
+    UserRepo userRepo;
 
     @PostMapping("/checkin")
-    public ResponseEntity checkIn() {
+    public ResponseEntity checkIn(@RequestBody User user) {
 
-        User user;
-        try {
-            user = (User) LoginSession.session.getAttribute("LOGIN-SESSION");
-        } catch (Exception e) {
-
-            return new ResponseEntity("Session Closed", HttpStatus.UNAUTHORIZED);
-
-        }
 
         Optional<Attendance> attendance = Optional.ofNullable(attendanceRepo.findByUser_IdAndDate(user.getId(), java.time.LocalDate.now() + ""));
 
@@ -53,16 +47,9 @@ public class DashBoardControlller {
 
 
     @PostMapping("/checkout")
-    public ResponseEntity checkOut() {
+    public ResponseEntity checkOut(@RequestBody User user) {
 
-        User user;
-        try {
-            user = (User) LoginSession.session.getAttribute("LOGIN-SESSION");
-        } catch (Exception e) {
 
-            return new ResponseEntity("Session Closed", HttpStatus.UNAUTHORIZED);
-
-        }
         Optional<Attendance> attendance = Optional.ofNullable(attendanceRepo.findByUser_IdAndDate(user.getId(), java.time.LocalDate.now() + ""));
 
         if (attendance.isPresent()) {
@@ -94,36 +81,22 @@ public class DashBoardControlller {
 
 
     @PostMapping("/report")
-    public ResponseEntity addReport(@RequestParam(value = "report", defaultValue = "") String report) {
+    public ResponseEntity addReport(@RequestParam(value = "report", defaultValue = "") String report, @RequestBody User u) {
 
-        User user;
-        try {
-            user = (User) LoginSession.session.getAttribute("LOGIN-SESSION");
-        } catch (Exception e) {
+        Optional<User> user = Optional.ofNullable(userRepo.findByUserNameAndPassword(u.getUserName(), u.getPassword()));
 
-            return new ResponseEntity("Session Closed", HttpStatus.UNAUTHORIZED);
+        if (!user.isPresent())
+            throw new UserNotFoundException("check your name or password");
 
-        }
-
-        Optional<Attendance> attendance = Optional.ofNullable(attendanceRepo.findByUser_IdAndDate(user.getId(), java.time.LocalDate.now() + ""));
-
-        if (attendance.isPresent()) {
-            if (attendance.get().getCheckOut() != null) {
-
-                attendance.get().setReport(report);
-                attendanceRepo.save(attendance.get());
-
-                return new ResponseEntity("Report Added Successfully", HttpStatus.OK);
-
-            }
+        Attendance attendance = new Attendance();
+        attendance.setReport(report);
+        attendance.setUser(user.get());
 
 
-        }
-        return new ResponseEntity("Check-Out First!", HttpStatus.OK);
+        return new ResponseEntity("Report Added Successfully", HttpStatus.OK);
 
 
     }
-
 
 
 }

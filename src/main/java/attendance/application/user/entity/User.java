@@ -1,5 +1,6 @@
-package com.example.attendanceservice.entities;
+package attendance.application.user.entity;
 
+import attendance.application.user.entity.Attendance;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;

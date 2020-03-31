@@ -1,4 +1,4 @@
-package com.example.attendanceservice.services;
+package attendance.application.user.service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

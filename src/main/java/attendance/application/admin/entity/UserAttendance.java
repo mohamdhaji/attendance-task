@@ -1,4 +1,4 @@
-package com.example.attendanceservice.entities;
+package attendance.application.admin.entity;
 
 public class UserAttendance {
 

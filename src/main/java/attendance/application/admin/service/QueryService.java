@@ -1,9 +1,7 @@
-package com.example.attendanceservice.services;
+package attendance.application.admin.service;
 
 
-import com.example.attendanceservice.entities.Attendance;
-import com.example.attendanceservice.entities.User;
-import com.example.attendanceservice.entities.UserAttendance;
+import attendance.application.admin.entity.UserAttendance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

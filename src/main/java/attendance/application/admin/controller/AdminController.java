@@ -1,8 +1,8 @@
-package com.example.attendanceservice.controllers;
+package attendance.application.admin.controller;
 
 
-import com.example.attendanceservice.entities.UserAttendance;
-import com.example.attendanceservice.services.QueryService;
+import attendance.application.admin.service.QueryService;
+import attendance.application.admin.entity.UserAttendance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

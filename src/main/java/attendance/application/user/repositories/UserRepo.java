@@ -1,6 +1,6 @@
-package com.example.attendanceservice.repositories;
+package attendance.application.user.repositories;
 
-import com.example.attendanceservice.entities.User;
+import attendance.application.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,4 +9,6 @@ public interface UserRepo extends JpaRepository<User,Integer> {
 
 
     User findByUserName(String userName);
+
+    User findByUserNameAndPassword(String username,String password);
 }

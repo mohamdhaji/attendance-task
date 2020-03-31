@@ -1,4 +1,4 @@
-package com.example.attendanceservice;
+package attendance.application;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,8 +1,6 @@
-package com.example.attendanceservice.entities;
+package attendance.application.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 
