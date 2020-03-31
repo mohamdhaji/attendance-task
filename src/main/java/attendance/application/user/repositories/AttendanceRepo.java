@@ -20,8 +20,8 @@ public interface AttendanceRepo extends JpaRepository<Attendance,Integer>{
         List<Attendance> findAllByDate(String date);
 
         List<Attendance> findAllByDateBetween(
-                LocalDateTime firstMonthDay,
-                LocalDateTime lastMonthDay);
+                Date firstMonthDay,
+                Date lastMonthDay);
 
 
 
