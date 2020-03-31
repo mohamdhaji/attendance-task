@@ -37,9 +37,8 @@ public class DashBoardControlller {
         if (!user.isPresent())
             throw new UserNotFoundException("check your name or password");
 
-        long millis=System.currentTimeMillis();
-        java.sql.Date date=new java.sql.Date(millis);
-        Optional<Attendance> attendance = Optional.ofNullable(attendanceRepo.findByUser_IdAndDate(user.get().getId(), date));
+
+        Optional<Attendance> attendance = Optional.ofNullable(attendanceRepo.findByUser_IdAndDate(user.get().getId(), TimeService.getCurrentDate()));
 
         if (attendance.isPresent()) {
             throw new UserCheckedException("Check-In Already Done Today!");
@@ -49,7 +48,7 @@ public class DashBoardControlller {
 
 
 
-        Attendance userAttendance = new Attendance(user.get(), checkInTime,date);
+        Attendance userAttendance = new Attendance(user.get(), checkInTime,TimeService.getCurrentDate());
         attendanceRepo.save(userAttendance);
 
 
@@ -65,10 +64,8 @@ public class DashBoardControlller {
         if (!user.isPresent())
             throw new UserNotFoundException("check your name or password");
 
-        long millis=System.currentTimeMillis();
-        java.sql.Date date=new java.sql.Date(millis);
 
-        Optional<Attendance> attendance = Optional.ofNullable(attendanceRepo.findByUser_IdAndDate(user.get().getId(), date ));
+        Optional<Attendance> attendance = Optional.ofNullable(attendanceRepo.findByUser_IdAndDate(user.get().getId(), TimeService.getCurrentDate() ));
 
         if (attendance.isPresent()) {
 
@@ -90,7 +87,7 @@ public class DashBoardControlller {
             String checkOutTime = TimeService.getCurrentTime();
 
 
-            Attendance userAttendance = new Attendance(checkOutTime, user.get(), date);
+            Attendance userAttendance = new Attendance(checkOutTime, user.get(), TimeService.getCurrentDate());
             return new ResponseEntity("Check-Out Successfully", HttpStatus.OK);
 
         }

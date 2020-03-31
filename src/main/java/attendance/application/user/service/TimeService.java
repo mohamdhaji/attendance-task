@@ -2,6 +2,7 @@ package attendance.application.user.service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 public class TimeService {
 
@@ -11,5 +12,12 @@ public class TimeService {
         String checkInTime = myDateObj.format(myFormatObj);
 
         return checkInTime;
+    }
+
+    public static Date getCurrentDate(){
+        long millis=System.currentTimeMillis();
+        java.sql.Date date=new java.sql.Date(millis);
+
+        return date;
     }
 }
