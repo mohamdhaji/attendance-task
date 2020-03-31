@@ -1,8 +1,8 @@
 package attendance.application.admin.controller;
 
 
-import attendance.application.admin.service.QueryService;
-import attendance.application.admin.entity.UserAttendance;
+import attendance.application.user.entity.Attendance;
+import attendance.application.user.repositories.AttendanceRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,20 +17,20 @@ public class AdminController {
 
 
 
+
     @Autowired
-    QueryService queryService;
+    AttendanceRepo attendanceRepo;
 
     @GetMapping("/perday")
-    public List<UserAttendance> getReportsPerDay(){
+    public List<Attendance> getReportsPerDay(){
 
-        return  queryService.JPQLQuery();
+       return attendanceRepo.findAllByDate(java.time.LocalDate.now() + "");
     }
 
-    @GetMapping("/permonth")
-    public List<UserAttendance> getReportsPerMonth(@RequestParam(value = "month", defaultValue = "") int month){
-
-        return  queryService.JPQLQueryTwo(month);
-    }
+//    @GetMapping("/permonth")
+//    public List<UsersAttendance> getReportsPerMonth(@RequestParam(value = "month", defaultValue = "") int month){
+//
+//    }
 
 
 }

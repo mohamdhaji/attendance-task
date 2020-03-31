@@ -26,19 +26,24 @@ public class DashBoardControlller {
     UserRepo userRepo;
 
     @PostMapping("/checkin")
-    public ResponseEntity checkIn(@RequestBody User user) {
+    public ResponseEntity checkIn(@RequestBody User u) {
+
+        Optional<User> user = Optional.ofNullable(userRepo.findByUserNameAndPassword(u.getUserName(), u.getPassword()));
+
+        if (!user.isPresent())
+            throw new UserNotFoundException("check your name or password");
 
 
-        Optional<Attendance> attendance = Optional.ofNullable(attendanceRepo.findByUser_IdAndDate(user.getId(), java.time.LocalDate.now() + ""));
+        Optional<Attendance> attendance = Optional.ofNullable(attendanceRepo.findByUser_IdAndDate(user.get().getId(), java.time.LocalDate.now() + ""));
 
         if (attendance.isPresent()) {
-            throw new UserCheckedException("Check-In Already Today!");
+            throw new UserCheckedException("Check-In Already Done Today!");
         }
 
         String checkInTime = TimeService.getCurrentTime();
 
 
-        Attendance userAttendance = new Attendance(user, checkInTime, java.time.LocalDate.now() + "");
+        Attendance userAttendance = new Attendance(user.get(), checkInTime, java.time.LocalDate.now() + "");
         attendanceRepo.save(userAttendance);
 
 
@@ -47,10 +52,15 @@ public class DashBoardControlller {
 
 
     @PostMapping("/checkout")
-    public ResponseEntity checkOut(@RequestBody User user) {
+    public ResponseEntity checkOut(@RequestBody User u) {
+
+        Optional<User> user = Optional.ofNullable(userRepo.findByUserNameAndPassword(u.getUserName(), u.getPassword()));
+
+        if (!user.isPresent())
+            throw new UserNotFoundException("check your name or password");
 
 
-        Optional<Attendance> attendance = Optional.ofNullable(attendanceRepo.findByUser_IdAndDate(user.getId(), java.time.LocalDate.now() + ""));
+        Optional<Attendance> attendance = Optional.ofNullable(attendanceRepo.findByUser_IdAndDate(user.get().getId(), java.time.LocalDate.now() + ""));
 
         if (attendance.isPresent()) {
 
@@ -65,13 +75,13 @@ public class DashBoardControlller {
                 return new ResponseEntity("Check-Out Successfully", HttpStatus.OK);
 
             } else {
-                throw new UserCheckedException("Check-Out Already Today!");
+                throw new UserCheckedException("Check-Out Already Done Today!");
             }
 
         } else {
             String checkOutTime = TimeService.getCurrentTime();
 
-            Attendance userAttendance = new Attendance(checkOutTime, user, java.time.LocalDate.now() + "");
+            Attendance userAttendance = new Attendance(checkOutTime, user.get(), java.time.LocalDate.now() + "");
             return new ResponseEntity("Check-Out Successfully", HttpStatus.OK);
 
         }
@@ -88,9 +98,11 @@ public class DashBoardControlller {
         if (!user.isPresent())
             throw new UserNotFoundException("check your name or password");
 
-        Attendance attendance = new Attendance();
+        Attendance attendance = attendanceRepo.findByUserId(user.get().getId());
         attendance.setReport(report);
         attendance.setUser(user.get());
+
+        attendanceRepo.save(attendance);
 
 
         return new ResponseEntity("Report Added Successfully", HttpStatus.OK);

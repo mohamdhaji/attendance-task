@@ -4,6 +4,8 @@ import attendance.application.user.entity.Attendance;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface AttendanceRepo extends JpaRepository<Attendance,Integer>{
 
@@ -20,7 +22,9 @@ public interface AttendanceRepo extends JpaRepository<Attendance,Integer>{
 
         Attendance findByUser_IdAndDate(int userId, String date);
 
+        Attendance findByUserId(int userId);
 
+        List<Attendance> findAllByDate(String date);
 
 
 
