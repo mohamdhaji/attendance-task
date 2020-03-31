@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RestController
@@ -43,7 +45,7 @@ public class DashBoardControlller {
         String checkInTime = TimeService.getCurrentTime();
 
 
-        Attendance userAttendance = new Attendance(user.get(), checkInTime, java.time.LocalDate.now() + "");
+        Attendance userAttendance = new Attendance(user.get(), checkInTime, LocalDateTime.now());
         attendanceRepo.save(userAttendance);
 
 
@@ -81,7 +83,7 @@ public class DashBoardControlller {
         } else {
             String checkOutTime = TimeService.getCurrentTime();
 
-            Attendance userAttendance = new Attendance(checkOutTime, user.get(), java.time.LocalDate.now() + "");
+            Attendance userAttendance = new Attendance(checkOutTime, user.get(), LocalDateTime.now());
             return new ResponseEntity("Check-Out Successfully", HttpStatus.OK);
 
         }
