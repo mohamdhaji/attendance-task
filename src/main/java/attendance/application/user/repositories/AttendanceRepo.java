@@ -8,12 +8,13 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AttendanceRepo extends JpaRepository<Attendance, Integer> {
 
 
-    Attendance findByUser_IdAndDate(int userId, Date date);
+    Optional<Attendance> findByUser_IdAndDate(int userId, Date date);
 
     Attendance findByUserId(int userId);
 

@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/dashboard")
-public class DashBoardControlller {
+public class DashBoardController {
 
     @Autowired
     AttendanceRepo attendanceRepo;
@@ -36,7 +36,7 @@ public class DashBoardControlller {
             throw new UserNotFoundException("check your name or password");
 
 
-        Optional<Attendance> attendance = Optional.ofNullable(attendanceRepo.findByUser_IdAndDate(user.get().getId(), TimeService.getCurrentDate()));
+        Optional<Attendance> attendance = attendanceRepo.findByUser_IdAndDate(user.get().getId(), TimeService.getCurrentDate());
 
         if (attendance.isPresent()) {
             throw new UserCheckedException("Check-In Already Done Today!");
@@ -63,7 +63,7 @@ public class DashBoardControlller {
             throw new UserNotFoundException("check your name or password");
 
 
-        Optional<Attendance> attendance = Optional.ofNullable(attendanceRepo.findByUser_IdAndDate(user.get().getId(), TimeService.getCurrentDate() ));
+        Optional<Attendance> attendance = attendanceRepo.findByUser_IdAndDate(user.get().getId(), TimeService.getCurrentDate());
 
         if (attendance.isPresent()) {
 
