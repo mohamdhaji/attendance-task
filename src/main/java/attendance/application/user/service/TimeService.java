@@ -22,10 +22,14 @@ public class TimeService {
 
         java.sql.Date date=new java.sql.Date(millis);
 
+//        LocalDate futureDate = LocalDate.now().plusMonths(4).plusDays(1);
+//
+//        return  java.sql.Date.valueOf(futureDate);
+
         return date;
     }
 
-    public static java.sql.Date getFirstDayOfTheMonth(int month){
+    public static java.sql.Date getFirstDayOfTheMonth(Integer month){
 
         LocalDate todaydate = LocalDate.now().withMonth(month);
 
@@ -41,6 +45,7 @@ public class TimeService {
     public static java.sql.Date getLastDayOfTheMonth(int month){
 
         LocalDate todaydate = LocalDate.now().withMonth(month);
+
 
         GregorianCalendar calendar = new GregorianCalendar();
 

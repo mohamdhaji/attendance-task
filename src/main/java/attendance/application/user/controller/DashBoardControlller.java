@@ -13,10 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
+
 import java.util.Optional;
 
 @RestController
@@ -29,10 +26,11 @@ public class DashBoardControlller {
     @Autowired
     UserRepo userRepo;
 
-    @PostMapping("/checkin")
-    public ResponseEntity checkIn(@RequestBody User u) {
 
-        Optional<User> user = Optional.ofNullable(userRepo.findByUserNameAndPassword(u.getUserName(), u.getPassword()));
+    @PostMapping("/checkin")
+    public ResponseEntity checkIn(@RequestParam(value = "userid", defaultValue = "") Integer userid) {
+
+        Optional<User>  user = userRepo.findById(userid);
 
         if (!user.isPresent())
             throw new UserNotFoundException("check your name or password");
@@ -57,9 +55,9 @@ public class DashBoardControlller {
 
 
     @PostMapping("/checkout")
-    public ResponseEntity checkOut(@RequestBody User u) {
+    public ResponseEntity checkOut(@RequestParam(value = "userid", defaultValue = "") Integer userid) {
 
-        Optional<User> user = Optional.ofNullable(userRepo.findByUserNameAndPassword(u.getUserName(), u.getPassword()));
+        Optional<User> user = userRepo.findById(userid);
 
         if (!user.isPresent())
             throw new UserNotFoundException("check your name or password");
@@ -97,9 +95,9 @@ public class DashBoardControlller {
 
 
     @PostMapping("/report")
-    public ResponseEntity addReport(@RequestParam(value = "report", defaultValue = "") String report, @RequestBody User u) {
+    public ResponseEntity addReport(@RequestParam(value = "report", defaultValue = "") String report, @RequestParam(value = "userid", defaultValue = "")Integer userid) {
 
-        Optional<User> user = Optional.ofNullable(userRepo.findByUserNameAndPassword(u.getUserName(), u.getPassword()));
+        Optional<User> user = userRepo.findById(userid);
 
         if (!user.isPresent())
             throw new UserNotFoundException("check your name or password");

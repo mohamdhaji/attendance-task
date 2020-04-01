@@ -35,10 +35,10 @@ public class LoginController {
     }
 
     @RequestMapping(value = "/search/password", method = RequestMethod.GET)
-    public ResponseEntity retrieveUserPass(@RequestParam(value = "password", defaultValue = "") String password,@RequestParam(value = "username", defaultValue = "") String username) {
+    public ResponseEntity retrieveUserPass(@RequestParam(value = "password", defaultValue = "") String password,@RequestParam(value = "id", defaultValue = "") Integer id) {
 
 
-        Optional<User> user= Optional.ofNullable(userRepo.findByUserNameAndPassword(username, password));
+        Optional<User> user= Optional.ofNullable(userRepo.findByIdAndPassword(id, password));
 
         if (!user.isPresent())
             throw new UserNotFoundException("check your name or password");

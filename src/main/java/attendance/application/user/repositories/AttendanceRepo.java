@@ -10,25 +10,30 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-public interface AttendanceRepo extends JpaRepository<Attendance,Integer>{
+public interface AttendanceRepo extends JpaRepository<Attendance, Integer> {
 
 
+    Attendance findByUser_IdAndDate(int userId, Date date);
 
-        Attendance findByUser_IdAndDate(int userId, Date date);
+    Attendance findByUserId(int userId);
 
-        Attendance findByUserId(int userId);
-
-        List<Attendance> findAllByDate(Date date);
+    List<Attendance> findAllByDate(Date date);
 
 
-        @Query(
-                value = "SELECT * FROM attendance a where a.date between :firstMonthDay AND :lastMonthDay",
-                nativeQuery=true
-        )
-        List<Attendance> findByDateBetween(@Param("firstMonthDay")
-                Date firstMonthDay,
-                                           @Param("lastMonthDay") Date lastMonthDay);
+//        @Query(
+//                value = "SELECT * FROM attendance a where a.date >= :firstMonthDay AND a.date <= :lastMonthDay",
+//                nativeQuery=true
+//        )
 
+    //                @Query(
+//                value = "SELECT * FROM attendance a where a.date between :firstMonthDay AND :lastMonthDay",
+//                nativeQuery=true
+//        )
+   // this is function or what ?
+    // ?? its jpa function which has keywords such as find By Date is the attribute name Between is keyword ok
+    List<Attendance> findByDateBetween(
+            java.sql.Date firstMonthDay,
+            java.sql.Date lastMonthDay);
 
 
 }
