@@ -6,6 +6,7 @@ import attendance.application.user.entity.Attendance;
 import attendance.application.user.entity.User;
 import attendance.application.user.repositories.AttendanceRepo;
 import attendance.application.user.repositories.UserRepo;
+import attendance.application.user.service.DashboardService;
 import attendance.application.user.service.TimeService;
 import attendance.application.exception.UserCheckedException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,19 +25,15 @@ public class DashBoardController {
     AttendanceRepo attendanceRepo;
 
     @Autowired
-    UserRepo userRepo;
+    DashboardService dashboardService;
 
 
     @PostMapping("/checkin")
-    public ResponseEntity checkIn(@RequestParam(value = "userid", defaultValue = "") Integer userid) {
+    public ResponseEntity checkIn(@RequestParam(value = "userid", defaultValue = "") int userid) {
 
-        Optional<User>  user = userRepo.findById(userid);
+        User user =dashboardService.checkUser(userid);
 
-        if (!user.isPresent())
-            throw new UserNotFoundException("check your name or password");
-
-
-        Optional<Attendance> attendance = attendanceRepo.findByUser_IdAndDate(user.get().getId(), TimeService.getCurrentDate());
+        Optional<Attendance> attendance = attendanceRepo.findByUser_IdAndDate(userid, TimeService.getCurrentDate());
 
         if (attendance.isPresent()) {
             throw new UserCheckedException("Check-In Already Done Today!");
@@ -44,26 +41,19 @@ public class DashBoardController {
 
         String checkInTime = TimeService.getCurrentTime();
 
-
-
-        Attendance userAttendance = new Attendance(user.get(), checkInTime,TimeService.getCurrentDate());
-        attendanceRepo.save(userAttendance);
-
+        Attendance userAttendance = new Attendance(user, checkInTime,TimeService.getCurrentDate());
+       Attendance a= attendanceRepo.save(userAttendance);
 
         return new ResponseEntity("Check-In Successfully", HttpStatus.OK);
     }
 
 
     @PostMapping("/checkout")
-    public ResponseEntity checkOut(@RequestParam(value = "userid", defaultValue = "") Integer userid) {
+    public ResponseEntity checkOut(@RequestParam(value = "userid", defaultValue = "") int userid) {
 
-        Optional<User> user = userRepo.findById(userid);
+        User user=dashboardService.checkUser(userid);
 
-        if (!user.isPresent())
-            throw new UserNotFoundException("check your name or password");
-
-
-        Optional<Attendance> attendance = attendanceRepo.findByUser_IdAndDate(user.get().getId(), TimeService.getCurrentDate());
+        Optional<Attendance> attendance = attendanceRepo.findByUser_IdAndDate(userid, TimeService.getCurrentDate());
 
         if (attendance.isPresent()) {
 
@@ -73,7 +63,7 @@ public class DashBoardController {
 
                 attendance.get().setCheckOut(checkOutTime);
 
-                attendanceRepo.save(attendance.get());
+                Attendance a = attendanceRepo.save(attendance.get());
 
                 return new ResponseEntity("Check-Out Successfully", HttpStatus.OK);
 
@@ -84,35 +74,26 @@ public class DashBoardController {
         } else {
             String checkOutTime = TimeService.getCurrentTime();
 
-
-            Attendance userAttendance = new Attendance(checkOutTime, user.get(), TimeService.getCurrentDate());
+            Attendance userAttendance = new Attendance(checkOutTime, user, TimeService.getCurrentDate());
             return new ResponseEntity("Check-Out Successfully", HttpStatus.OK);
 
         }
 
-
     }
 
-
     @PostMapping("/report")
-    public ResponseEntity addReport(@RequestParam(value = "report", defaultValue = "") String report, @RequestParam(value = "userid", defaultValue = "")Integer userid) {
+    public ResponseEntity addReport(@RequestParam(value = "report", defaultValue = "") String report, @RequestParam(value = "userid", defaultValue = "")int userid) {
 
-        Optional<User> user = userRepo.findById(userid);
+        User user = dashboardService.checkUser(userid);
 
-        if (!user.isPresent())
-            throw new UserNotFoundException("check your name or password");
-
-        Attendance attendance = attendanceRepo.findByUserId(user.get().getId());
+        Attendance attendance = attendanceRepo.findByUserId(user.getId());
         attendance.setReport(report);
-        attendance.setUser(user.get());
+        attendance.setUser(user);
 
         attendanceRepo.save(attendance);
 
-
         return new ResponseEntity("Report Added Successfully", HttpStatus.OK);
 
-
     }
-
 
 }
