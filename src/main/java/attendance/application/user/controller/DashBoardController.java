@@ -1,11 +1,9 @@
 package attendance.application.user.controller;
 
 
-import attendance.application.exception.UserNotFoundException;
 import attendance.application.user.entity.Attendance;
 import attendance.application.user.entity.User;
 import attendance.application.user.repositories.AttendanceRepo;
-import attendance.application.user.repositories.UserRepo;
 import attendance.application.user.service.DashboardService;
 import attendance.application.user.service.TimeService;
 import attendance.application.exception.UserCheckedException;

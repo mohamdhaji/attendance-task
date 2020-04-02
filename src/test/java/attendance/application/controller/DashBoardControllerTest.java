@@ -12,13 +12,43 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @Tag("dashboard")
 public class DashBoardControllerTest {
+
+
+    @InjectMocks
+    DashboardService dashboardService;
+
+    @Mock
+    UserRepo userRepo;
+
+    User  user;
+
+
+    @BeforeEach
+    public void userInfoTest(){
+        MockitoAnnotations.initMocks(this);
+        user = new User();
+
+        when(userRepo.findById(anyInt())).thenReturn(java.util.Optional.ofNullable(user));
+        Optional<User> savedUser=userRepo.findById(anyInt());
+        verify(userRepo).findById(anyInt());
+        assertNotNull(dashboardService.checkUser(anyInt()));
+
+    }
+
+
+
+
+    @Nested
+    public class UserAttendance{
 
     @InjectMocks
     DashBoardController dashBoardController;
@@ -28,15 +58,31 @@ public class DashBoardControllerTest {
 
     @Mock
     DashboardService dashboardService;
-    User  user;
     Attendance  attendace;
+
+
 
     @BeforeEach
     void initEach() {
 
         MockitoAnnotations.initMocks(this);
-        user = new User();
-          attendace = new Attendance();
+        attendace = new Attendance();
+
+        when(dashboardService.checkUser(anyInt())).thenReturn(user);
+        User u=dashboardService.checkUser(anyInt());
+
+        when(attendanceRepo.findByUser_IdAndDate(anyInt(),anyObject())).thenReturn(java.util.Optional.ofNullable(null));
+
+       
+
+        when(attendanceRepo.save(any(Attendance.class))).thenReturn(attendace);
+        Attendance savedAttendance=attendanceRepo.save(new Attendance());
+        verify(attendanceRepo).save(any(Attendance.class));
+
+
+//        verify(attendanceRepo).findByUser_IdAndDate(anyInt(),anyObject());
+
+
     }
 
 
@@ -44,23 +90,20 @@ public class DashBoardControllerTest {
     @Test
     void checkIn() {
 
-        when(dashboardService.checkUser(anyInt())).thenReturn(user);
-
-        when(attendanceRepo.findByUser_IdAndDate(user.getId(), TimeService.getCurrentDate())).thenReturn(java.util.Optional.ofNullable(attendace));
-
-        when(attendanceRepo.save(any(Attendance.class))).thenReturn(attendace);
         assertNotNull(dashBoardController.checkIn(anyInt()));
     }
 
     @DisplayName("check out")
     @Test
     void checkOut() {
-        when(dashboardService.checkUser(anyInt())).thenReturn(user);
 
-        when(attendanceRepo.findByUser_IdAndDate(user.getId(), TimeService.getCurrentDate())).thenReturn(java.util.Optional.ofNullable(attendace));
-        when(attendanceRepo.save(any(Attendance.class))).thenReturn(attendace);
 
         assertNotNull(dashBoardController.checkOut(anyInt()));
     }
+
+    }
+
+
+
 
 }
